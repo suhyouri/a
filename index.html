@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Press to Start</title>
+    <style>
+      body {
+        font-family: "Source Serif Pro";
+        background: grey;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      .flex {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        width: 100vw;
+        background: white;
+        margin: auto;
+      }
+      h1 {
+        text-align: center;
+        font-size: 2.2vw;
+      }
+      h3 {
+        position: fixed;
+        bottom: 1vh;
+        font-size: 5vw;
+        text-align: center;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <audio id="backgroundMusic" src="background.wav" loop></audio>
+    <audio id="effectSound1" src="effect1.wav"></audio>
+    <audio id="effectSound2" src="effect2.wav"></audio>
+
+    <div class="flex" style="width: 100vw">
+      <h1>Press \ to Start</h1>
+    </div>
+    <h3>\</h3>
+
+    <script>
+      let lines = `
+        A 
+        B 
+        C 
+        D 
+        E 
+        F
+      `.split("\n");
+
+      let counter = 0;
+      let canNavigate = true;
+      let width = 100;
+
+      document.addEventListener("keydown", function (event) {
+        const backgroundMusic = document.getElementById("backgroundMusic");
+        const effectSound1 = document.getElementById("effectSound1");
+        const effectSound2 = document.getElementById("effectSound2");
+
+        if (event.key === "/" && !canNavigate) {
+          if (counter < lines.length - 2) {
+            effectSound2.play();
+            width -= 12.5; //1.5
+            document.querySelector(".flex").style.width = `${width}vw`;
+            document.querySelector("h1").innerText = lines[counter + 1];
+            document.querySelector("h3").innerText = "\\";
+          } else {
+            width = 0;
+            document.querySelector(".flex").style.width = `${width}vw`;
+            document.querySelector("h3").innerText = "";
+            // backgroundMusic.pause();
+            effectSound2.pause();
+          }
+          canNavigate = true;
+          counter = counter + 1;
+        }
+
+        if (event.key === "\\" && canNavigate) {
+          console.log(`counter: ${counter}`);
+          if (counter < lines.length - 1) {
+            backgroundMusic.play();
+            effectSound1.play();
+            document.querySelector("h3").innerText = "/";
+          } else {
+            document.querySelector("h3").innerText = "";
+          }
+          canNavigate = false;
+        }
+      });
+    </script>
+  </body>
+</html>
